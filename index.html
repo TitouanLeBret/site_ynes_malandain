@@ -217,37 +217,39 @@
             <h2 style="margin-bottom: 2rem;">Prendre Rendez-vous</h2>
             <form id="rdv-form" class="rdv-form">
                 <div class="form-row">
-                    <input type="text" placeholder="Prénom" required>
-                    <input type="text" placeholder="Nom" required>
+                    <input type="text" name="user_prenom" placeholder="Prénom" required>
+                    <input type="text" name="user_nom" placeholder="Nom" required>
                 </div>
                 <div class="form-row">
-                    <input type="email" placeholder="Email" required>
-                    <input type="tel" placeholder="Téléphone" required>
+                    <input type="email" name="user_email" placeholder="Email" required>
+                    <input type="tel" name="user_phone" placeholder="Téléphone" required>
                 </div>
                 <div class="form-row">
-                    <select required>
+                    <select name="user_service" required>
                         <option value="" disabled selected>Choisissez une prestation</option>
-                        <option value="shooting">Shooting photos</option>
-                        <option value="mariage-photo">Mariage (photos)</option>
-                        <option value="mariage-video">Mariage (vidéos)</option>
-                        <option value="graphisme">Graphisme</option>
-                        <option value="video-corp">Vidéos entreprise</option>
+                        <option value="Shooting photos">Shooting photos</option>
+                        <option value="Mariage (photos)">Mariage (photos)</option>
+                        <option value="Mariage (vidéos)">Mariage (vidéos)</option>
+                        <option value="Graphisme">Graphisme</option>
+                        <option value="Vidéos entreprise">Vidéos entreprise</option>
                     </select>
                 </div>
                 <div class="form-row">
                     <div class="datetime-group">
-                        <label>Date & Heure souhaitées pour une visio :</label>
-                        <input type="datetime-local" class="datetime-input" required>
+                        <label>Date & Heure souhaitées pour une visio (facultatif) :</label>
+                        <input type="datetime-local" name="user_date" class="datetime-input">
                     </div>
                 </div>
                 <div class="form-row">
-                    <textarea placeholder="Parlez-moi de votre projet (lieu, attentes, ambiance...)" rows="5" required></textarea>
+                    <textarea name="message" placeholder="Parlez-moi de votre projet (lieu, attentes, ambiance...)" rows="5" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-dark" style="width: 100%;">ENVOYER MA DEMANDE</button>
             </form>
         </div>
     </div>
 
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

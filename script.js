@@ -172,15 +172,77 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Initialisation d'EmailJS avec une fonction anonyme pour la robustesse (vous remplacerez ces identifiants)
+    if (typeof emailjs !== 'undefined') {
+        emailjs.init("VOTRE_CLE_PUBLIQUE_EMAILJS");
+    }
+
     if (rdvForm) {
         rdvForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            alert('Merci pour votre demande ! Ynès vous contactera très prochainement.');
-            modal.classList.remove('active');
-            setTimeout(() => {
-                modal.style.display = 'none';
-                rdvForm.reset();
-            }, 300);
+            
+            const btn = rdvForm.querySelector('button[type="submit"]');
+            const originalText = btn.textContent;
+            btn.textContent = "ENVOI EN COURS...";
+
+            const formData = new FormData(rdvForm);
+            
+            const rawDate = formData.get('user_date');
+            
+            const prenom = formData.get('user_prenom');
+            const nom = formData.get('user_nom');
+            const service = formData.get('user_service');
+            
+            let calLink = "";
+            let formattedDate = "Non précisée";
+
+            if (rawDate) {
+                const dateObj = new Date(rawDate);
+                const pad = (n) => (n < 10 ? '0' + n : n);
+                const YYYY = dateObj.getFullYear();
+                const MM = pad(dateObj.getMonth() + 1);
+                const DD = pad(dateObj.getDate());
+                const HH = pad(dateObj.getHours());
+                const MIN = pad(dateObj.getMinutes());
+                const startDate = `${YYYY}${MM}${DD}T${HH}${MIN}00`;
+                
+                // Durée de la réunion = 1 heure
+                const endObj = new Date(dateObj.getTime() + 60*60*1000);
+                const endHH = pad(endObj.getHours());
+                const endDate = `${YYYY}${MM}${DD}T${endHH}${MIN}00`;
+                
+                // Création du lien Google Calendar seulement si la date est fournie
+                calLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=RDV+Yn%C3%A8s+Malandain+-+${encodeURIComponent(prenom)}+${encodeURIComponent(nom)}&details=Prestation:+${encodeURIComponent(service)}&dates=${startDate}/${endDate}`;
+                formattedDate = dateObj.toLocaleString('fr-FR');
+            }
+
+            const templateParams = {
+                user_prenom: prenom,
+                user_nom: nom,
+                user_email: formData.get('user_email'),
+                user_phone: formData.get('user_phone'),
+                user_service: service,
+                user_date: formattedDate,
+                message: formData.get('message'),
+                calendar_link: calLink
+            };
+
+            // Exécution finale
+            emailjs.send("VOTRE_SERVICE_ID", "VOTRE_TEMPLATE_ID", templateParams)
+                .then(() => {
+                    alert('Merci pour votre demande ! Un e-mail a été envoyé à Ynès, et vous recevrez bientôt une confirmation.');
+                    modal.classList.remove('active');
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                        rdvForm.reset();
+                        btn.textContent = originalText;
+                    }, 300);
+                })
+                .catch((error) => {
+                    alert("Une erreur est survenue lors de l'envoi de votre demande via EmailJS. Vérifiez vos clés API ou réessayez plus tard.");
+                    console.error("Erreur EmailJS détaillée :", error);
+                    btn.textContent = originalText;
+                });
         });
     }
 });
