@@ -729,19 +729,19 @@ a {
     /* Header */
     .site-header { 
         height: auto; 
-        padding: 5px 0 10px; 
+        padding: 5px 0; 
         flex-direction: column; 
         background-color: rgba(255,255,255,0.98);
         backdrop-filter: blur(10px);
     }
-    .header-left, .header-right { width: 100%; justify-content: center; margin-bottom: 0.5rem; }
+    .header-left, .header-right { width: 100%; justify-content: center; margin-bottom: 0.2rem; }
     .header-right { margin-bottom: 0; }
-    /* Autoriser le wrap pour éviter que "SERVICES" sorte de l'écran sur les petits téléphones */
-    .header-nav { font-size: 0.75rem; gap: 10px; flex-wrap: wrap; justify-content: center; }
-    .header-nav .btn-pink { padding: 6px 10px; font-size: 0.65rem; }
+    /* Menu réduit */
+    .header-nav { font-size: 0.65rem; gap: 8px; flex-wrap: wrap; justify-content: center; }
+    .header-nav .btn-pink { padding: 5px 8px; font-size: 0.6rem; }
     .header-nav a { letter-spacing: 0px; }
-    .logo-cursive { font-size: 3rem; padding-top: 0; margin-bottom: -5px; }
-    .site-header.scrolled { height: auto; padding: 5px 0 10px; position: fixed; }
+    .logo-cursive { font-size: 2.5rem; padding-top: 0; margin-bottom: -5px; }
+    .site-header.scrolled { height: auto; padding: 5px 0; position: fixed; }
 
     /* Hero */
     .hero-section {
@@ -753,7 +753,17 @@ a {
     }
     .hero-left, .hero-right { width: 100%; height: auto; }
     .hero-left { padding: 2rem 1.5rem; text-align: center; order: 2; height: auto; box-sizing: border-box; }
-    .hero-right { padding: 3rem 1rem; order: 1; }
+    .hero-right { 
+        padding: 3rem 1rem; 
+        order: 1; 
+        background: repeating-linear-gradient(
+            to right,
+            var(--c-strip-pink),
+            var(--c-strip-pink) 12px,
+            var(--c-white) 12px,
+            var(--c-white) 24px
+        );
+    }
     .hero-title { font-size: 3rem !important; } /* Typographie forcée plus petite */
     .hero-content { margin-top: 0; padding-bottom: 0; }
     .hero-image { position: relative; height: 100%; width: 100%; }
