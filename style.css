@@ -160,7 +160,8 @@ a {
 }
 .logo-cursive {
     font-family: var(--f-logo-cursive);
-    font-size: 6rem;
+    font-size: clamp(3rem, 6vw, 6rem); /* S'adapte dynamiquement à la largeur de l'écran */
+    font-style: italic;
     color: var(--c-white);
     line-height: 0.7;
     padding-top: 15px; /* Empêche le "Y" d'être coupé en haut */
@@ -204,11 +205,12 @@ a {
     border-bottom: 1px solid rgba(255,255,255,0.4);
 }
 .site-header.scrolled .logo-cursive,
-.site-header.scrolled .logo-sans {
-    color: var(--c-dark);
-}
 .site-header.scrolled .logo-cursive {
-    font-size: 4rem;
+    font-size: clamp(2.5rem, 4vw, 4rem);
+}
+.site-header.scrolled .logo-sans {
+    font-size: 0.7rem;
+    margin-left: 10px;
 }
 
 /* =========================
@@ -249,12 +251,13 @@ a {
     text-align: center;
     margin-top: -50px;
 }
-.hero-content h1 {
-    font-style: italic;
-    font-size: 5rem;
-    line-height: 1.1;
-    margin-bottom: 3.5rem;
+.hero-title {
+    font-family: var(--f-logo-cursive);
+    font-size: clamp(2.5rem, 5.5vw, 5rem); /* Police ultra fluide */
+    font-style: italic; /* Accentue l'effet calligraphique penché */
     color: var(--c-dark);
+    margin-bottom: 2rem;
+    line-height: 1.1;
 }
 
 /* =========================
@@ -702,17 +705,113 @@ a {
     color: #666;
 }
 
-/* RESPONSIVE - Just basic to keep it functional, but design is desktop-first */
-@media (max-width: 1024px) {
-    .container { padding: 0 2rem; }
-    .hero-section { flex-direction: column; height: auto; }
-    .hero-left, .hero-right { width: 100%; }
-    .hero-left { height: 600px; }
-    .hero-content { margin-top: 4rem; padding-bottom: 4rem;}
-    .services-section, .about-content { flex-direction: column; gap: 4rem; }
-    .about-section { padding: 6rem 2rem; }
-    .polaroid { width: 100%; max-width: 400px; }
-    .instagram-grid { grid-template-columns: repeat(2, 1fr); }
-    .contact-content, .footer-top { flex-direction: column; gap: 3rem; text-align: center; }
+/* =========================
+   VERSION TABLETTE & ÉCRANS MOYENS (Anti-écrasement)
+========================= */
+@media (max-width: 1200px) {
+    .header-nav { gap: 1.5vw; }
+    .header-nav .btn-pink { padding: 10px 15px; }
+    .hero-left { padding: 0 2rem; }
+    .container { padding: 0 3rem; }
+}
+
+/* =========================
+   VERSION MOBILE 100% FONCTIONNELLE
+========================= */
+@media (max-width: 850px) {
+    /* Global Adjustments */
+    body, html { overflow-x: hidden; } /* Interdit au texte de déborder de l'écran */
+    .section-title { font-size: 2rem; word-wrap: break-word; }
+    .section-text { font-size: 1rem; word-wrap: break-word; }
+    .container { padding: 0 1.5rem; width: 100%; box-sizing: border-box; }
+
+    /* Header */
+    .site-header { 
+        height: auto; 
+        padding: 15px 0; 
+        flex-direction: column; 
+        background-color: rgba(255,255,255,0.95);
+        backdrop-filter: blur(10px);
+    }
+    .header-left, .header-right { width: 100%; justify-content: center; margin-bottom: 1rem; }
+    .header-right { margin-bottom: 0; }
+    .header-nav { font-size: 0.65rem; gap: 8px; flex-wrap: nowrap; justify-content: center; }
+    .header-nav .btn-pink { padding: 6px 10px; font-size: 0.6rem; }
+    .header-nav a { letter-spacing: 0px; }
+    .logo-cursive { font-size: 3rem; padding-top: 0; margin-bottom: -5px; }
+    .site-header.scrolled { height: auto; padding: 10px 0; position: fixed; }
+
+    /* Hero */
+    .hero-section {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        margin-top: 0;
+        padding-top: 150px; /* Space for the stacked header */
+    }
+    .hero-left, .hero-right { width: 100%; height: auto; }
+    .hero-left { padding: 3rem 1.5rem; text-align: center; order: 2; height: auto; box-sizing: border-box; }
+    .hero-right { height: 45vh; order: 1; }
+    .hero-title { font-size: 2.2rem; } /* Réduction pour ne pas sortir de l'écran mobile */
+    .hero-content { margin-top: 0; padding-bottom: 0; }
+    .hero-image { position: relative; height: 100%; width: 100%; }
+
+    /* About */
+    .about-section { padding: 4rem 1.5rem; }
+    .about-content { flex-direction: column; text-align: center; gap: 2rem; box-sizing: border-box; }
+    .polaroid-wrapper { margin-bottom: 2rem; margin-right: 0; }
+    .polaroid { width: 90%; max-width: 320px; margin: 0 auto; transform: rotate(0); padding: 10px 10px 50px 10px; }
+    .polaroid:hover { transform: scale(1.02); }
+
+    /* Services */
+    .services-section { padding: 4rem 1.5rem; flex-direction: column; gap: 3rem; box-sizing: border-box; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+    /* Testimonials */
+    .carousel-track { padding: 1rem 0; gap: 0; }
+    .testimonial-card { flex: 0 0 90vw; padding: 1.5rem; margin: 0 5vw; box-sizing: border-box; border-radius: 6px; }
+    .carousel-controls { gap: 1rem; margin-top: 1rem; }
+    .btn-nav-arrow { width: 40px; height: 40px; font-size: 1.2rem; }
+
+    /* Contact & Instagram */
+    .contact-section { padding-top: 80px; padding-bottom: 50px; }
+    .instagram-wrap { 
+        width: 100%; 
+        position: relative; 
+        left: 0; 
+        margin-bottom: 40px; /* Remis en positif pour donner la place au texte ! */
+    }
+    .instagram-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 0 1.5rem; }
+    .contact-content { padding: 0 1.5rem; text-align: center; flex-direction: column; gap: 2rem; box-sizing: border-box;}
+    .contact-right { flex: auto; margin-right: 0; width: 100%; }
+
+    /* Hanging Phone */
+    .phone-under-insta {
+        bottom: -160px; /* Pend au-dessus du vide créé par le margin positif */
+        left: auto;
+        right: 10px; /* Placé sur le côté pour ne pas écraser le texte "On en discute ?" */
+        transform: none;
+    }
+    .phone-swing { height: 180px; } /* Téléphone plus petit */
+
+    /* Footer */
+    .site-footer { padding: 4rem 1.5rem 2rem; box-sizing: border-box;}
+    .footer-top { flex-direction: column; text-align: center; gap: 2rem; margin-bottom: 3rem; padding-bottom: 2rem; }
     .footer-logo { align-items: center; }
+    .footer-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+    .footer-actions .btn { width: 100%; text-align: center; }
+    .footer-bottom { flex-direction: column; text-align: center; gap: 10px; }
+
+    /* Modal */
+    .modal-content { 
+        width: 90%; 
+        padding: 2rem 1.5rem; 
+        border-radius: 8px; 
+        box-sizing: border-box; 
+        margin: 1rem;
+    }
+    .modal-content h2 { font-size: 1.8rem; text-align: center; margin-bottom: 1.5rem !important; }
+    .form-row { flex-direction: column; gap: 10px; }
+    .rdv-form input, .rdv-form select, .rdv-form textarea { padding: 12px; font-size: 0.9rem; }
+    .modal-close { top: 10px; right: 15px; }
 }
