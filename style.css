@@ -183,10 +183,10 @@ a {
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 3rem;
-    font-size: 0.85rem;
+    gap: clamp(1rem, 2vw, 3rem);
+    font-size: clamp(0.7rem, 1vw, 0.85rem);
     font-weight: 700;
-    letter-spacing: 1.5px;
+    letter-spacing: clamp(0.5px, 0.1vw, 1.5px);
 }
 .navbar a:not(.btn) {
     color: var(--c-body);
@@ -748,51 +748,58 @@ a {
     .header-right { margin-bottom: 0; padding: 0 10px; }
     
     /* Menu ultra-réduit et sécurité anti-débordement */
-    .header-nav { 
+    .navbar { 
         width: 100%;
         display: flex;
-        font-size: 10px !important; 
-        gap: 6px !important; 
+        font-size: 11px !important; 
+        gap: 15px !important; 
         flex-wrap: wrap !important; 
         justify-content: center !important; 
         align-items: center;
+        padding: 0 10px;
     }
-    .header-nav a { 
-        font-size: 10px !important;
-        letter-spacing: 0px !important; 
+    .navbar a { 
+        font-size: 11px !important;
+        letter-spacing: 0.5px !important; 
         white-space: nowrap;
     }
-    .header-nav .btn-pink, .header-nav .btn-pink-light { 
-        padding: 4px 6px !important; 
+    .navbar .btn-pink, .navbar .btn-pink-light { 
+        padding: 5px 8px !important; 
         font-size: 9px !important; 
     }
-    .logo-cursive { font-size: 2.2rem !important; padding-top: 0; margin-bottom: -5px; }
+    .logo-cursive { font-size: 3rem !important; padding-top: 0; margin-bottom: -5px; color: var(--c-dark) !important; }
+    .logo-sans { font-size: 0.7rem !important; color: var(--c-dark) !important; margin-left: 10px; transition: none; }
     .site-header.scrolled { height: auto !important; padding: 5px 0 !important; position: fixed; }
 
     /* Hero */
     .hero-section {
         flex-direction: column;
-        height: auto;
-        min-height: 100vh;
+        height: auto !important;
+        min-height: auto !important;
         margin-top: 0;
-        padding-top: 130px; /* Moins d'espace perdu en haut */
+        padding-top: 90px; /* Moins d'espace perdu en haut */
+        padding-bottom: 2rem;
     }
     .hero-left, .hero-right { width: 100%; height: auto; }
-    .hero-left { padding: 2rem 1.5rem; text-align: center; order: 2; height: auto; box-sizing: border-box; }
+    
+    /* On met l'image en Premier sur Mobile, c'est beaucoup plus esthétique ! */
+    .hero-left { padding: 0 1.5rem; text-align: center; order: 1; height: auto; box-sizing: border-box; }
+    .hero-image { max-height: 50vh; width: 100%; object-fit: cover; object-position: top; }
+    
+    /* Et le texte rayé en dessous */
     .hero-right { 
-        padding: 3rem 1rem; 
-        order: 1; 
+        padding: 4rem 1.5rem; 
+        order: 2; 
         background: repeating-linear-gradient(
             to right,
-            var(--c-strip-pink),
-            var(--c-strip-pink) 12px,
-            var(--c-white) 12px,
-            var(--c-white) 24px
-        );
+            var(--c-white),
+            var(--c-white) 15px,
+            var(--c-pink-light) 15px,
+            var(--c-pink-light) 30px
+        ) !important;
     }
-    .hero-title { font-size: 3rem !important; } /* Typographie forcée plus petite */
-    .hero-content { margin-top: 0; padding-bottom: 0; }
-    .hero-image { position: relative; height: 100%; width: 100%; }
+    .hero-title { font-size: 3rem !important; margin-bottom: 2rem; }
+    .hero-content { margin-top: 0; padding-bottom: 0; display: flex; flex-direction: column; align-items: center; }
 
     /* About */
     .about-section { padding: 3rem 1rem; }
