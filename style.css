@@ -126,16 +126,19 @@ a {
 
 /* =========================
    HEADER STICKY
-========================= */
+=========================*/
+/* Sticky Global Header */
 .site-header {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 130px;
-    display: flex;
     z-index: 1000;
-    transition: background-color 0.4s ease, height 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    justify-content: space-between;
+    transition: all 0.4s ease;
+    background-color: transparent;
 }
 .header-left {
     width: 45%;
@@ -217,7 +220,7 @@ a {
     max-height: 100vh;
 }
 .hero-left {
-    width: 45%;
+    width: 50%;
     position: relative;
 }
 .hero-image {
@@ -228,7 +231,7 @@ a {
 }
 
 .hero-right {
-    width: 55%;
+    width: 50%;
     position: relative;
     background: repeating-linear-gradient(
         to right,
@@ -367,9 +370,10 @@ a {
     width: 100vw;
     overflow-x: auto;
     scroll-behavior: smooth;
-    /* Hide scrollbar */
-    -ms-overflow-style: none;
+    scroll-snap-type: x mandatory;
     scrollbar-width: none;
+    -ms-overflow-style: none;
+    position: relative;
 }
 .carousel-track::-webkit-scrollbar {
     display: none;
@@ -377,8 +381,9 @@ a {
 .testimonial-card {
     background-color: var(--c-testimonial-bg);
     padding: 2.5rem;
-    flex: 0 0 calc(28vw); /* 3 cards */
+    flex: 0 0 28vw; /* Largeur fixe respectée pour défilement */
     display: flex;
+
     flex-direction: column;
     justify-content: space-between;
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -393,6 +398,7 @@ a {
 }
 .carousel-track {
     scroll-snap-type: x mandatory;
+    position: relative;
 }
 .testimonial-card.main-card {
     background-color: #F3E4E8;
@@ -531,7 +537,7 @@ a {
 }
 .phone-under-insta {
     position: absolute;
-    bottom: -430px;
+    bottom: -380px;
     left: calc(15% + 15px);
     right: auto;
     z-index: 4; /* Sous le z-index: 5 de l'instagram wrap */

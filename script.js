@@ -11,92 +11,97 @@ document.addEventListener('DOMContentLoaded', () => {
     // Sticky Header Logic
     const mainHeader = document.getElementById('main-header');
     window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
+        if (window.scrollY > 120) {
             mainHeader.classList.add('scrolled');
         } else {
             mainHeader.classList.remove('scrolled');
         }
     });
-    const prevBtn = document.querySelector('.prev-btn');
-    const nextBtn = document.querySelector('.next-btn');
 
     const originalCards = Array.from(document.querySelectorAll('.testimonial-card'));
     const N = originalCards.length;
 
-    // To make it infinite, duplicate the entire set of cards before and after
-    // Prepend a set (in reverse to maintain DOM order when using insertBefore)
+    // Clone for infinite loop
     originalCards.slice().reverse().forEach(card => {
         let clone = card.cloneNode(true);
-        clone.classList.remove('main-card');
         track.insertBefore(clone, track.firstChild);
     });
-    // Append a set
     originalCards.forEach(card => {
         let clone = card.cloneNode(true);
-        clone.classList.remove('main-card');
         track.appendChild(clone);
     });
 
     let cards = Array.from(document.querySelectorAll('.testimonial-card'));
-    // Start at the middle set, specifically the center card (N + 1)
-    let currentIndex = N + 1; 
+    let currentIndex = N + 1; // Middle item
     let isTransitioning = false;
 
+    // Add explicit click selection for each card
+    cards.forEach((card, i) => {
+        card.addEventListener('click', () => {
+            if (isTransitioning || i === currentIndex) return;
+            currentIndex = i;
+            updateCarousel();
+        });
+    });
+
     function updateCarousel(instant = false) {
+        if (instant) {
+            cards.forEach(c => c.style.transition = 'none');
+        }
+
         cards.forEach(c => c.classList.remove('main-card'));
         cards[currentIndex].classList.add('main-card');
         
         track.style.scrollBehavior = instant ? 'auto' : 'smooth';
+        
+        // Use scrollLeft directly avoiding window jump!
+        const targetCard = cards[currentIndex];
+        const scrollPos = targetCard.offsetLeft - track.clientWidth / 2 + targetCard.clientWidth / 2;
+        
+        track.scrollLeft = scrollPos;
 
-        cards[currentIndex].scrollIntoView({ 
-            behavior: instant ? 'auto' : 'smooth', 
-            block: 'nearest', 
-            inline: 'center' 
-        });
+        if (instant) {
+            // Force reflow so the browser renders before restoring transitions
+            void track.offsetWidth;
+            cards.forEach(c => c.style.transition = '');
+        }
     }
 
-    // Initialize without animation
-    setTimeout(() => {
-        updateCarousel(true);
-    }, 100);
+    // Initialize instantly
+    updateCarousel(true);
 
-    window.addEventListener('resize', () => {
-         updateCarousel(true);
-    });
+    const prevBtn = document.querySelector('.prev-btn');
+    const nextBtn = document.querySelector('.next-btn');
 
     nextBtn.addEventListener('click', () => {
         if (isTransitioning) return;
         isTransitioning = true;
-        
         currentIndex++;
         updateCarousel();
-
         setTimeout(() => {
             if (currentIndex >= 2 * N) {
-                currentIndex = currentIndex - N;
-                updateCarousel(true);
-            }
-            isTransitioning = false;
-        }, 500); // Wait for smooth scroll to finish
-    });
-
-    prevBtn.addEventListener('click', () => {
-        if (isTransitioning) return;
-        isTransitioning = true;
-
-        currentIndex--;
-        updateCarousel();
-
-        setTimeout(() => {
-            if (currentIndex < N) {
-                currentIndex = currentIndex + N;
+                currentIndex -= N;
                 updateCarousel(true);
             }
             isTransitioning = false;
         }, 500);
     });
 
-    // Trackpad Scroll Sync for Infinite loop
+    prevBtn.addEventListener('click', () => {
+        if (isTransitioning) return;
+        isTransitioning = true;
+        currentIndex--;
+        updateCarousel();
+        setTimeout(() => {
+            if (currentIndex < N) {
+                currentIndex += N;
+                updateCarousel(true);
+            }
+            isTransitioning = false;
+        }, 500);
+    });
+
+    // Handle scroll snapping loops via trackpad
     let scrollTimeout;
     track.addEventListener('scroll', () => {
         if (isTransitioning) return;
@@ -113,16 +118,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
             if(closestId !== currentIndex) {
                 currentIndex = closestId;
-                updateCarousel(true); // purely visual update of the class
+                updateCarousel(true); 
                 
-                // Jump logic if needed
                 if (currentIndex >= 2 * N) {
-                    setTimeout(() => { currentIndex = currentIndex - N; updateCarousel(true); }, 50);
+                    currentIndex -= N;
+                    updateCarousel(true);
                 } else if (currentIndex < N) {
-                    setTimeout(() => { currentIndex = currentIndex + N; updateCarousel(true); }, 50);
+                    currentIndex += N;
+                    updateCarousel(true);
                 }
             }
-        }, 100);
+        }, 150);
     });
 
     // Hanging Phone Interaction
