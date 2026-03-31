@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const track = document.getElementById('testimonial-track');
     const controls = document.querySelector('.carousel-controls');
-    
+
     // Generate carousel buttons
     controls.innerHTML = `
         <button class="btn-nav-arrow prev-btn">&larr;</button>
@@ -39,8 +39,21 @@ document.addEventListener('DOMContentLoaded', () => {
     cards.forEach((card, i) => {
         card.addEventListener('click', () => {
             if (isTransitioning || i === currentIndex) return;
+            isTransitioning = true;
             currentIndex = i;
             updateCarousel();
+
+            // Boucle infinie invisible après l'animation
+            setTimeout(() => {
+                if (currentIndex >= 2 * N) {
+                    currentIndex -= N;
+                    updateCarousel(true);
+                } else if (currentIndex < N) {
+                    currentIndex += N;
+                    updateCarousel(true);
+                }
+                isTransitioning = false;
+            }, 500);
         });
     });
 
@@ -51,13 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         cards.forEach(c => c.classList.remove('main-card'));
         cards[currentIndex].classList.add('main-card');
-        
+
         track.style.scrollBehavior = instant ? 'auto' : 'smooth';
-        
+
         // Use scrollLeft directly avoiding window jump!
         const targetCard = cards[currentIndex];
         const scrollPos = targetCard.offsetLeft - track.clientWidth / 2 + targetCard.clientWidth / 2;
-        
+
         track.scrollLeft = scrollPos;
 
         if (instant) {
@@ -110,16 +123,16 @@ document.addEventListener('DOMContentLoaded', () => {
             let closestId = currentIndex;
             let closestDist = Infinity;
             cards.forEach((card, i) => {
-                const dist = Math.abs(card.getBoundingClientRect().left - track.getBoundingClientRect().left - track.clientWidth/2 + card.clientWidth/2);
-                if(dist < closestDist) {
+                const dist = Math.abs(card.getBoundingClientRect().left - track.getBoundingClientRect().left - track.clientWidth / 2 + card.clientWidth / 2);
+                if (dist < closestDist) {
                     closestDist = dist;
                     closestId = i;
                 }
             });
-            if(closestId !== currentIndex) {
+            if (closestId !== currentIndex) {
                 currentIndex = closestId;
-                updateCarousel(true); 
-                
+                updateCarousel(true);
+
                 if (currentIndex >= 2 * N) {
                     currentIndex -= N;
                     updateCarousel(true);
@@ -133,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Hanging Phone Interaction
     const phone = document.getElementById('hanging-phone');
-    if(phone) {
+    if (phone) {
         phone.addEventListener('mouseover', () => {
             phone.style.animationDuration = '1.5s';
         });
@@ -180,19 +193,19 @@ document.addEventListener('DOMContentLoaded', () => {
     if (rdvForm) {
         rdvForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
+
             const btn = rdvForm.querySelector('button[type="submit"]');
             const originalText = btn.textContent;
             btn.textContent = "ENVOI EN COURS...";
 
             const formData = new FormData(rdvForm);
-            
+
             const rawDate = formData.get('user_date');
-            
+
             const prenom = formData.get('user_prenom');
             const nom = formData.get('user_nom');
             const service = formData.get('user_service');
-            
+
             let calLink = "";
             let formattedDate = "Non précisée";
 
@@ -205,12 +218,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const HH = pad(dateObj.getHours());
                 const MIN = pad(dateObj.getMinutes());
                 const startDate = `${YYYY}${MM}${DD}T${HH}${MIN}00`;
-                
+
                 // Durée de la réunion = 1 heure
-                const endObj = new Date(dateObj.getTime() + 60*60*1000);
+                const endObj = new Date(dateObj.getTime() + 60 * 60 * 1000);
                 const endHH = pad(endObj.getHours());
                 const endDate = `${YYYY}${MM}${DD}T${endHH}${MIN}00`;
-                
+
                 // Création du lien Google Calendar seulement si la date est fournie
                 calLink = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=RDV+Yn%C3%A8s+Malandain+-+${encodeURIComponent(prenom)}+${encodeURIComponent(nom)}&details=Prestation:+${encodeURIComponent(service)}&dates=${startDate}/${endDate}`;
                 formattedDate = dateObj.toLocaleString('fr-FR');
